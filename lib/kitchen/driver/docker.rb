@@ -32,6 +32,8 @@ module Kitchen
       default_config :run_command,   '/usr/sbin/sshd -D -o UseDNS=no -o UsePAM=no'
       default_config :username,      'kitchen'
       default_config :password,      'kitchen'
+      default_config :interactive,   false
+      default_config :tty,           false
 
       default_config :use_sudo do |driver|
         !driver.remote_socket?
@@ -96,6 +98,13 @@ module Kitchen
 
       def dockerfile
         from = "FROM #{config[:image]}"
+        options = ''
+        if config[:tty]
+          options += "TTY true\n"
+        end
+        if config[:interactive]
+          options += "INTERACTIVE true\n"
+        end
         platform = case config[:platform]
         when 'debian', 'ubuntu'
           disable_upstart = <<-eos
@@ -131,7 +140,7 @@ module Kitchen
         Array(config[:provision_command]).each do |cmd|
           custom << "RUN #{cmd}\n"
         end
-        [from, platform, base, custom].join("\n")
+        [from, options, platform, base, custom].join("\n")
       end
 
       def parse_image_id(output)
