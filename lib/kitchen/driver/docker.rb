@@ -215,7 +215,10 @@ module Kitchen
         cmd = "run -d -p 22"
         Array(config[:forward]).each {|port| cmd << " -p #{port}"}
         Array(config[:dns]).each {|dns| cmd << " -dns #{dns}"}
-        Array(config[:volume]).each {|volume| cmd << " -v #{volume}"}
+        Array(config[:volume]).each { |volume|
+          formatted = volume % { :instance_name => instance.name }
+          cmd << " -v #{formatted}"
+        }
         Array(config[:volumes_from]).each {|container| cmd << " --volumes-from #{container}"}
         Array(config[:links]).each {|link| cmd << " --link #{link}"}
         cmd << " --name #{config[:instance_name]}" if config[:instance_name]
