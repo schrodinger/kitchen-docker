@@ -252,7 +252,12 @@ module Kitchen
 
       def rm_container(state)
         container_id = state[:container_id]
-        docker_command("stop #{container_id}")
+        begin
+          docker_command("stop #{container_id}")
+        rescue Exception => e
+          print "WARNING: Ignoring failure to stop container"
+        end
+
         docker_command("rm #{container_id}")
       end
 
