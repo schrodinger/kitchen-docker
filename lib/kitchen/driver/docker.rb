@@ -34,7 +34,8 @@ module Kitchen
       default_config :use_cache,     true
       default_config :remove_images, false
       default_config :run_command,   '/usr/sbin/sshd -D -o UseDNS=no -o UsePAM=no -o PasswordAuthentication=yes ' +
-                                     '-o UsePrivilegeSeparation=no -o PidFile=/tmp/sshd.pid'
+                                     '-o UsePrivilegeSeparation=no -o PidFile=/tmp/sshd.pid ' +
+                                     '-o AcceptEnv="AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY"'
       default_config :username,      'kitchen'
       default_config :password,      'kitchen'
       default_config :tls,           false
